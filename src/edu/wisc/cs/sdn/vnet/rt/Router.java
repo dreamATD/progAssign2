@@ -156,8 +156,8 @@ public class Router extends Device
 		etherPacket.setDestinationMACAddress(ndstMAC);
 		etherPacket.setSourceMACAddress(nsrcMAC);
 
-		etherPacket.resetChecksum();
-		etherPacket.serialize();
+		etherPacket.getPayload().resetChecksum();
+		etherPacket.getPayload().serialize();
 
 		System.out.println(etherPacket.toString());
 		sendPacket(etherPacket, outIface);
