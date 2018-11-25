@@ -51,9 +51,9 @@ public class RouteTable
 				System.out.println("dskMk: " + dskMK);
 				System.out.println("IP: " + ip);
 				System.out.println("**********");
-				if (((dstIP & dskMK) == (ip & dskMK)) && dskMK < flag) {
+				if (((dstIP & dskMK) == (ip & dskMK)) && -dskMK < flag) {
 					res = entry;
-					flag = dskMK;
+					flag = -dskMK;
 				}
 			}
 
