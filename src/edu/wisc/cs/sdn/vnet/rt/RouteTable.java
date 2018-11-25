@@ -50,6 +50,7 @@ public class RouteTable
 				System.out.println("dstIP: " + (dstIP & dskMK));
 				System.out.println("dskMk: " + dskMK);
 				System.out.println("IP: " + (ip & dskMK));
+				System.out.println("flag: " + flag);
 				System.out.println("**********");
 				if (((dstIP & dskMK) == (ip & dskMK)) && (flag == null || dskMK > flag)) {
 					res = entry;
