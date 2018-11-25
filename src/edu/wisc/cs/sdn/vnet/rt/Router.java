@@ -132,7 +132,7 @@ public class Router extends Device
 		/*
 		* Subtract TTL.
 		* */
-		payload.setTtl((byte) (payload.getTtl() - 1));
+		((IPv4) etherPacket.getPayload()).setTtl((byte) (payload.getTtl() - 1));
 		if (payload.getTtl() == 0) return;
 
 		/*
@@ -155,10 +155,11 @@ public class Router extends Device
 		byte[] ndstMAC = arpCache.lookup(dstIP).getMac().toBytes();
 		etherPacket.setDestinationMACAddress(ndstMAC);
 		etherPacket.setSourceMACAddress(nsrcMAC);
+
 		etherPacket.resetChecksum();
 		etherPacket.serialize();
-		System.out.println(etherPacket.toString());
 
+		System.out.println(etherPacket.toString());
 		sendPacket(etherPacket, outIface);
 		
 		/********************************************************************/
