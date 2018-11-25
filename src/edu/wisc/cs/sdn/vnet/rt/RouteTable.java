@@ -42,7 +42,7 @@ public class RouteTable
 			/* TODO: Find the route entry with the longest prefix match      */
 
 			RouteEntry res = null;
-			int maxMK = 0;
+			int flag = 0;
 			for (Iterator<RouteEntry> iter = this.entries.iterator(); iter.hasNext(); ) {
 				RouteEntry entry = iter.next();
 				int dstIP = entry.getDestinationAddress();
@@ -51,9 +51,9 @@ public class RouteTable
 				System.out.println("dskMk: " + dskMK);
 				System.out.println("IP: " + ip);
 				System.out.println("**********");
-				if (((dstIP & dskMK) & (ip & dskMK)) == (ip & dskMK) && dskMK > maxMK) {
+				if (((dstIP & dskMK) == (ip & dskMK)) && (dskMK & -dskMK) < flag) {
 					res = entry;
-					maxMK = dskMK;
+					flag = (dskMK & -dskMK);
 				}
 			}
 
