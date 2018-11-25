@@ -100,11 +100,6 @@ public class Router extends Device
 		/*
 		* Check the checksum.
 		* */
-		byte[] payloadData = null;
-		if (payload != null) {
-			payloadData = payload.serialize();
-		}
-
 		int optionsLength = 0;
 
 		byte[] data = new byte[payload.getTotalLength()];
@@ -122,8 +117,6 @@ public class Router extends Device
 		bb.putInt(payload.getDestinationAddress());
 		if (payload.getOptions() != null)
 			bb.put(payload.getOptions());
-		if (payloadData != null)
-			bb.put(payloadData);
 
 		bb.rewind();
 		int accumulation = 0;
