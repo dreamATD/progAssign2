@@ -5,6 +5,12 @@ import edu.wisc.cs.sdn.vnet.DumpFile;
 import edu.wisc.cs.sdn.vnet.Iface;
 
 import net.floodlightcontroller.packet.Ethernet;
+import net.floodlightcontroller.packet.IPacket;
+import net.floodlightcontroller.packet.IPv4;
+import net.floodlightcontroller.packet.MACAddress;
+
+import java.nio.ByteBuffer;
+import java.util.Map;
 
 /**
  * @author Aaron Gember-Jacobson and Anubhavnidhi Abhashkumar
@@ -84,7 +90,77 @@ public class Router extends Device
 		
 		/********************************************************************/
 		/* TODO: Handle packets                                             */
-		
+
+		/*
+		* Check the type of the package
+		* */
+		if (etherPacket.getEtherType() != Ethernet.TYPE_IPv4) return;
+		IPv4 payload = (IPv4) etherPacket.getPayload();
+
+		/*
+		* Check the checksum.
+		* */
+		byte[] payloadData = null;
+		if (payload != null) {
+			payloadData = payload.serialize();
+		}
+
+		int optionsLength = 0;
+
+		byte[] data = new byte[payload.getTotalLength()];
+		ByteBuffer bb = ByteBuffer.wrap(data);
+
+		bb.put((byte) (((payload.getVersion() & 0xf) << 4) | (payload.getHeaderLength() & 0xf)));
+		bb.put(payload.getDiffServ());
+		bb.putShort(payload.getTotalLength());
+		bb.putShort(payload.getIdentification());
+		bb.putShort((short) (((payload.getFlags() & 0x7) << 13) | (payload.getFragmentOffset() & 0x1fff)));
+		bb.put(payload.getTtl());
+		bb.put(payload.getProtocol());
+		bb.putShort((short) 0);
+		bb.putInt(payload.getSourceAddress());
+		bb.putInt(payload.getDestinationAddress());
+		if (payload.getOptions() != null)
+			bb.put(payload.getOptions());
+		if (payloadData != null)
+			bb.put(payloadData);
+
+		bb.rewind();
+		int accumulation = 0;
+		for (int i = 0; i < payload.getHeaderLength() * 2; ++i) {
+			accumulation += 0xffff & bb.getShort();
+		}
+		accumulation = ((accumulation >> 16) & 0xffff)
+				+ (accumulation & 0xffff);
+		short checksum = payload.getChecksum();
+		if (((accumulation ^ checksum) & 0xffff) != 0xffff) return;
+
+		/*
+		* Subtract TTL.
+		* */
+		payload.setTtl((byte) (payload.getTtl() - 1));
+		if (payload.getTtl() == 0) return;
+
+		/*
+		* Check whether the destination IP address equals the router's interface
+		* */
+		int srcIP = payload.getSourceAddress();
+		int dstIP = payload.getDestinationAddress();
+		for (Map.Entry<String, Iface> entry: interfaces.entrySet()) {
+			if (entry.getValue().getIpAddress() == dstIP) return;
+		}
+
+		/*
+		* Forwarding packet
+		* */
+		RouteEntry routeEntry = routeTable.lookup(dstIP);
+		if (routeEntry == null) return;
+		Iface outIface = routeEntry.getInterface();
+		byte[] nsrcMAC = outIface.getMacAddress().toBytes();
+		byte[] ndstMAC = arpCache.lookup(dstIP).getMac().toBytes();
+		etherPacket.setDestinationMACAddress(ndstMAC);
+		etherPacket.setSourceMACAddress(nsrcMAC);
+		sendPacket(etherPacket, outIface);
 		
 		/********************************************************************/
 	}

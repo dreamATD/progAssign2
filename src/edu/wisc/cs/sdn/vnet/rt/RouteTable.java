@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -39,8 +40,20 @@ public class RouteTable
         {
 			/*****************************************************************/
 			/* TODO: Find the route entry with the longest prefix match      */
-			
-			return null;
+
+			RouteEntry res = null;
+			int maxMK = 0;
+			for (Iterator<RouteEntry> iter = this.entries.iterator(); iter.hasNext(); ) {
+				int dstIP = iter.next().getDestinationAddress();
+				int dskMK = iter.next().getMaskAddress();
+				System.out.println(dskMK);
+				if (((dstIP & dskMK) & (ip & dskMK)) == (ip & dskMK) && dskMK > maxMK) {
+					res = iter.next();
+					maxMK = dskMK;
+				}
+			}
+
+			return res;
 			
 			/*****************************************************************/
         }
@@ -156,7 +169,7 @@ public class RouteTable
 	
 	/**
 	 * Remove an entry from the route table.
-	 * @param dstIP destination IP of the entry to remove
+	 * @param dstIp destination IP of the entry to remove
      * @param maskIp subnet mask of the entry to remove
      * @return true if a matching entry was found and removed, otherwise false
 	 */
@@ -174,9 +187,9 @@ public class RouteTable
 	
 	/**
 	 * Update an entry in the route table.
-	 * @param dstIP destination IP of the entry to update
+	 * @param dstIp destination IP of the entry to update
      * @param maskIp subnet mask of the entry to update
-	 * @param gatewayAddress new gateway IP address for matching entry
+	 * @param gwIp new gateway IP address for matching entry
 	 * @param iface new router interface for matching entry
      * @return true if a matching entry was found and updated, otherwise false
 	 */
@@ -196,7 +209,7 @@ public class RouteTable
 
     /**
 	 * Find an entry in the route table.
-	 * @param dstIP destination IP of the entry to find
+	 * @param dstIp destination IP of the entry to find
      * @param maskIp subnet mask of the entry to find
      * @return a matching entry if one was found, otherwise null
 	 */
