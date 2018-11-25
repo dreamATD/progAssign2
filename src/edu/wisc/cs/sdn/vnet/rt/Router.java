@@ -126,7 +126,7 @@ public class Router extends Device
 		accumulation = ((accumulation >> 16) & 0xffff)
 				+ (accumulation & 0xffff);
 		short checksum = payload.getChecksum();
-		System.out.println("Checksum: " + accumulation + " " + checksum + " " + ((accumulation ^ checksum) & 0xffff));
+//		System.out.println("Checksum: " + accumulation + " " + checksum + " " + ((accumulation ^ checksum) & 0xffff));
 		if (((accumulation ^ checksum) & 0xffff) != 0xffff) return;
 
 		/*
