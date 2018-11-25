@@ -94,6 +94,7 @@ public class Router extends Device
 		/*
 		* Check the type of the package
 		* */
+		System.out.println("Type checking: " + etherPacket.getEtherType() + " " + Ethernet.TYPE_IPv4);
 		if (etherPacket.getEtherType() != Ethernet.TYPE_IPv4) return;
 		IPv4 payload = (IPv4) etherPacket.getPayload();
 
@@ -133,6 +134,7 @@ public class Router extends Device
 		accumulation = ((accumulation >> 16) & 0xffff)
 				+ (accumulation & 0xffff);
 		short checksum = payload.getChecksum();
+		System.out.println("Checksum: " + accumulation + " " + checksum + " " + ((accumulation ^ checksum) & 0xffff));
 		if (((accumulation ^ checksum) & 0xffff) != 0xffff) return;
 
 		/*
