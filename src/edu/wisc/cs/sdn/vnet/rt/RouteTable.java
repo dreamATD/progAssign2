@@ -47,11 +47,11 @@ public class RouteTable
 				RouteEntry entry = iter.next();
 				int dstIP = entry.getDestinationAddress();
 				int dskMK = entry.getMaskAddress();
-				System.out.println("dstIP: " + (dstIP & dskMK));
-				System.out.println("dskMk: " + dskMK);
-				System.out.println("IP: " + (ip & dskMK));
-				System.out.println("flag: " + flag);
-				System.out.println("**********");
+//				System.out.println("dstIP: " + (dstIP & dskMK));
+//				System.out.println("dskMk: " + dskMK);
+//				System.out.println("IP: " + (ip & dskMK));
+//				System.out.println("flag: " + flag);
+//				System.out.println("**********");
 				if (((dstIP & dskMK) == (ip & dskMK)) && (flag == null || dskMK > flag)) {
 					res = entry;
 					flag = dskMK;
