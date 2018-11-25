@@ -148,6 +148,7 @@ public class Router extends Device
 		* Forwarding packet
 		* */
 		RouteEntry routeEntry = routeTable.lookup(dstIP);
+		System.out.println(routeEntry);
 		if (routeEntry == null) return;
 		Iface outIface = routeEntry.getInterface();
 		byte[] nsrcMAC = outIface.getMacAddress().toBytes();
