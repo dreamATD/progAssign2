@@ -155,9 +155,10 @@ public class Router extends Device
 		byte[] ndstMAC = arpCache.lookup(dstIP).getMac().toBytes();
 		etherPacket.setDestinationMACAddress(ndstMAC);
 		etherPacket.setSourceMACAddress(nsrcMAC);
-		System.out.println(etherPacket.toString());
 		etherPacket.resetChecksum();
 		etherPacket.serialize();
+		System.out.println(etherPacket.toString());
+
 		sendPacket(etherPacket, outIface);
 		
 		/********************************************************************/
