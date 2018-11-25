@@ -46,7 +46,10 @@ public class RouteTable
 			for (Iterator<RouteEntry> iter = this.entries.iterator(); iter.hasNext(); ) {
 				int dstIP = iter.next().getDestinationAddress();
 				int dskMK = iter.next().getMaskAddress();
-				System.out.println(dskMK);
+				System.out.println("dstIP: " + dstIP);
+				System.out.println("dskMk: " + dskMK);
+				System.out.println("IP: " + ip);
+				System.out.println("**********");
 				if (((dstIP & dskMK) & (ip & dskMK)) == (ip & dskMK) && dskMK > maxMK) {
 					res = iter.next();
 					maxMK = dskMK;

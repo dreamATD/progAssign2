@@ -39,8 +39,6 @@ public class Switch extends Device
 		
 		/********************************************************************/
 		/* TODO: Handle packets                                             */
-		
-		/********************************************************************/
 
 		MACAddress srcMac = etherPacket.getSourceMAC();
 		MACAddress dstMac = etherPacket.getDestinationMAC();
@@ -66,5 +64,7 @@ public class Switch extends Device
 		else for (Map.Entry<String, Iface> mapEntry: interfaces.entrySet()) {
 			sendPacket(etherPacket, mapEntry.getValue());
 		}
+
+		/********************************************************************/
 	}
 }
