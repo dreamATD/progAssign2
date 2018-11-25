@@ -94,7 +94,6 @@ public class Router extends Device
 		/*
 		* Check the type of the package
 		* */
-		System.out.println("Type checking: " + etherPacket.getEtherType() + " " + Ethernet.TYPE_IPv4);
 		if (etherPacket.getEtherType() != Ethernet.TYPE_IPv4) return;
 		IPv4 payload = (IPv4) etherPacket.getPayload();
 
