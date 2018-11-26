@@ -1,7 +1,5 @@
 #  Link & Network Layer Forwarding
 
-By Liu Tianyi (516030910565)
-
 ## About my code
 
 ### Switch
