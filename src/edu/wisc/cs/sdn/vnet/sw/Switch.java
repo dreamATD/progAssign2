@@ -62,7 +62,7 @@ public class Switch extends Device
 		Iface outIface = interfaces.get(outIfaceName);
 		if (outIfaceName != null) sendPacket(etherPacket, outIface);
 		else for (Map.Entry<String, Iface> mapEntry: interfaces.entrySet()) {
-			sendPacket(etherPacket, mapEntry.getValue());
+			if (!mapEntry.getKey().equals(inIfaceName)) sendPacket(etherPacket, mapEntry.getValue());
 		}
 
 		/********************************************************************/
